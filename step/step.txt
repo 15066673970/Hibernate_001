@@ -1,0 +1,77 @@
+---1.基础配置	hibernate初识
+	1-》window-》preferences-》java-》build path-》user libraries将所需的所有jar包新建user libraries目录添加进来，方便后期使用加，
+	我们新建3个，一个hibernate-core，其中所有的jar包就是我们解压的hibernate项目下的lib目录下required文件夹里面的hibernate运行所必须的jar包。
+	juint4单元测试junit-4.10.jar ，还有数据库的连接驱动jar文件。此处使用的是oracle数据库
+	2-》去项目里面拷贝一个hibernate.cfg.xml文件，在cfg文件里面写好连接数据库所需的基础条件
+	property标签
+		connection.class
+		connection.url
+		connection.username
+		connection.password
+		dialect
+		show_sql
+		format_sql
+		hbm2ddl.auto
+	mapping标签
+		resource属性定义需要加载某个hbm文件，注意这里的hbm文件前面的包名需要使用/来区分，例如：<mapping resource="com/jinan/www/entity/Students.hbm.xml"/>
+	
+	实体类：Students.java 
+	实体类(对象-关系)映射文件：Students.hbm.xml
+			Hiernate采用XML格式的文件来指定对象和关系数据之间的映射。Hibernate通过这个文件来生成各种sql语句。
+			命名规则为 实体类名.hbm.xml  应该和实体类放在同一目录下。
+	hibernate配置文件：hibernate.cfg.xml
+	test类：test源文件夹下的StudentsTest.java文件
+
+---2.hibernate进阶
+		1.hibernate.cfg.xml常用配置
+			show_sql
+			format_sql
+			hbm2ddl.auto可以帮助由java代码生成数据库脚本，进而生成具体的表结构。create(如果有那么删除)|update|create-drop(先创建再删除)|validate(如果现有的表结构和原来的表结构不同，那么就不会继续执行)
+			default_schema默认的数据库
+			dialect 数据库方言
+			
+		2.session简介
+		 hibernate不建议直接使用connection操作数据库，而是通过session操作数据库，可以理解为操作数据的对象。
+		 session与connection是多对一的关系。每个session都有一个与之对应的connection，一个connection不同时刻可供多个session使用
+		 save(),update(),delete(),createQuery()....
+		 
+		3.transaction简介
+		
+		hibernate对数据的操作都是封装在事务当中，并且默认是非自动提交的方式。所以用session保存对象时，如果不开启事务，并且手工提交事务，对象并不会真正保存在数据库中。
+		如果你想让hibernate像JDBC那么自动提交事务，必须调用session对象的dowork()方法，获得JDBC的connection后，设置其为自动提交模式。(通常不推荐这样做)
+		（这里在StudentsTest2.java中测验了。但是很遗憾没有通过，不知道是不是hibernate版本的问题还是其他的，貌似不是很重要，暂且跳过）
+		
+		
+		4.session详解
+		获得session的方式：
+			openSession()
+			getCurrentSession();
+		如果使用getCurrentSession需要在hibernate.cfg.xml文件中配置：
+			如果是本地事务（JDBC事务）
+				<property name="hibernate.current_session_context_class">thread</property>		
+			如果是全局事务（jta事务）
+				<property name="hibernate.current_session_context_class">jta</property>
+		
+		SessionTest.java
+		
+		区别：1，getCurrentSession在事务提交或者回滚后会自动关闭，而openSession需要手动关闭，如果使用openSession没有手动关闭，多次之后会导致连接池溢出。
+		2，openSession每次创建新的session对象，getCurrentSession使用现有的session对象。
+		
+		SessionTest.java
+		
+		5.hbm配置文件常用配置（还需要总结）
+		<hibernate-mapping></hibernate-mapping>常用属性
+		
+		
+---3.单表操作
+		1.单一主键
+		2.基本类型
+		3.对象类型
+		4.组件属性
+		5.单表操作crud实例
+
+
+
+---3.一对多映射
+---4.多对多映射
+---5.注解
