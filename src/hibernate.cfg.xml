@@ -22,6 +22,7 @@
 		<property name="format_sql">true</property>
 		<property name="hbm2ddl.auto">update</property>
 	
+		<!-- 如果session获取的方式是getCurrentSession的时候，需要添加此属性，代表jdbc事务，如果是jta全局事务，需要写jta，单纯的opensession不需要添加这个属性 -->
 		<property name="hibernate.current_session_context_class">thread</property>
 	
 		<mapping resource="com/jinan/www/entity/Students.hbm.xml"/>
