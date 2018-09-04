@@ -65,10 +65,28 @@
 		
 ---3.单表操作
 		1.单一主键
+			主键的生成策略：assigned 由java应用程序负责生成（手工赋值）
+						native 由底层数据库自动生成标识符，如果是mysql就是increment，如果是oracle就是sequence，等等。
 		2.基本类型
+			参考img图片。
 		3.对象类型
+			使用hibernate读取、写入一个blob类型的数据。
+			testWriteBlob();testReadBlob();
 		4.组件属性
+			实体类中的某个属性属于用户自定义的类的对象
+			Teacher.java
+			 Address.java
+			  Teacher.hbm.xml 
+			  TestComponent.java
 		5.单表操作crud实例
+			save()
+			delete()
+			update()
+			get/load(查询单个记录)
+				1，get方法会在调用之后立即向数据库发出sql语句，返回持久化对象。load方法会在调用之后返回一个代理对象，该代理对象只保存了
+					实体对象的id，知道使用对象的非主键属性时才会发出sql语句。
+				2，查询数据库中不存在的数据时，get方法返回null
+					load方法抛出异常org.hibernate.ObjectNotFoundException
 
 
 

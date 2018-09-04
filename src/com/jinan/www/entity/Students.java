@@ -1,6 +1,7 @@
 package com.jinan.www.entity;
 //学生类
 
+import java.sql.Blob;
 import java.util.Date;
 
 public class Students {
@@ -14,6 +15,7 @@ public class Students {
 		private String gender;//性别
 		private Date birthday;//出生日期
 		private String address;// 地址
+		private Blob picture;//头像
 		public Students() {
 			super();
 		}
@@ -55,11 +57,19 @@ public class Students {
 		public void setAddress(String address) {
 			this.address = address;
 		}
+		
+		public Blob getPicture() {
+			return picture;
+		}
+		public void setPicture(Blob picture) {
+			this.picture = picture;
+		}
 		@Override
 		public String toString() {
 			return "Students [sid=" + sid + ", sname=" + sname + ", gender=" + gender + ", birthday=" + birthday
-					+ ", address=" + address + "]";
+					+ ", address=" + address + ", picture=" + picture + "]";
 		}
+	
 		 
 		
 		

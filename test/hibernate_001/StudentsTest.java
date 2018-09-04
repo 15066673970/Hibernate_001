@@ -3,8 +3,16 @@ package hibernate_001;
 
 
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.Blob;
 import java.util.Date;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -17,6 +25,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.jinan.www.entity.Students;
+
+import oracle.net.aso.s;
 
 public class StudentsTest {
 
@@ -96,13 +106,56 @@ public class StudentsTest {
 	public void testSaveStudents() {
 		
 		//生成学生对象
-		Students student = new Students(1, "zs", "男", new Date(), "武当山");
+		Students student = new Students();
+		student.setSname("zs");
+		student.setGender("男");
+		student.setBirthday(new Date());
+		student.setAddress("峨眉山");
 		System.out.println(student);
 		session.save(student);//保存对象进入数据库
 		System.out.println(session);
 		
 	}
 
+	@Test	
+	public void testWriteBlob() throws Exception {
+		Students s1 = new Students(4, "lisisi", "男", new Date(), "武当山");
+		//先获得照片文件
+		File file  = new File("d:"+File.separator+"1.jpg");
+		//获得照片文件的输入流
+		InputStream inputStream = new FileInputStream(file);
+		
+		//创建一个blob对象
+		Blob image = Hibernate.getLobCreator(session).createBlob(inputStream,inputStream.available());
+		
+		//设置照片属性
+		s1.setPicture(image);
+		
+		//保存学生
+		session.save(s1);
+	}
+	
+	@Test
+	public void testReadBlob() throws Exception{
+		//首先获得学生对象
+		Students s1 =(Students) session.get(Students.class, 4);
+		//获得blob对象
+		Blob  image= s1.getPicture();
+		//获得照片的输入流
+		InputStream inputStream  = image.getBinaryStream();
+		//创建输出流
+		File file= new File("d:"+File.separator+"2.jpg");
+		//获取输出流
+		OutputStream outputStream = new FileOutputStream(file);
+		//创建缓冲区
+		byte[] buff = new byte[inputStream.available()];
+		inputStream.read(buff);
+		outputStream.write(buff);
+		outputStream.flush();
+		inputStream.close();
+		outputStream.close();
+		
+	}
 	
 	
 }
